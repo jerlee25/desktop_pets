@@ -6,8 +6,6 @@ from ahk import AHK
 
 import matplotlib.pyplot as plt
 
-
-
 ahk = AHK()
 
 # Tasks to do:
@@ -15,7 +13,7 @@ ahk = AHK()
 # - Implement functions that connect User Events 
 #   to behaviors of the Model, and update the GUI
 #   based on the results
-# After the model
+# After the model- p
 # - Improve the GUI separate from the model: add images to the buttons
 # - Improve the Model separate from the GUI: make computer "smart" (see rps_model_v2.py) 
 root = tk.Tk()
@@ -56,7 +54,6 @@ class RPS_Application(tk.Frame):
         #         # print(pixelcolor)
         #         color = px[x, y]
                 
-                
         #         pixelcolor = '#{:02x}{:02x}{:02x}'.format(color[0], color[1], color[2])
         #         # print(color)
         #         # print(pixelcolor)
@@ -65,17 +62,9 @@ class RPS_Application(tk.Frame):
         #         # pixelcolor ="green"
                 
         #         c.create_line(x, y, x + 1, y,fill=pixelcolor)
-       
-
-     
-
-    
-
+ 
     def reset_game(self):
         pass
-
-
-
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()

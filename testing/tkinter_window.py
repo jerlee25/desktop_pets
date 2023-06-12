@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.ttk as ttk
 
 class Application(tk.Frame):
 
@@ -8,11 +9,13 @@ class Application(tk.Frame):
         self.create_widget()
     
     def create_widget(self):
-        tk.Label(self, text = "").grid(row = 0, column = 0, sticky = tk.W)
-        tk.Label(self, text = "").grid(row = 1, column = 0, sticky = tk.W)
-        tk.Label(self, text = "").grid(row = 0, column = 1, sticky = tk.W)
-        tk.Label(self, text = "").grid(row = 1, column = 1, sticky = tk.W)
-        button = tk.Button(self, text = "Launch!", ).grid(row = 2, column = 2)
+
+        style = ttk.Style()
+        style.configure("TButton", font = ('calibri', 30, 'bold'), foreground = 'red')
+        style.map("TButton", foreground = [('active', '!disabled', 'red')],
+                     background = [('active', 'grey')])
+        button = ttk.Button(self, text = "Launch!", style = "TButton", command = root.destroy).grid(
+                            row = 0, column = 0, padx = 100, pady = 100)
         
         # uploading images option
         # customizing menu

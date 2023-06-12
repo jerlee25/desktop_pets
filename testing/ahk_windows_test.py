@@ -13,7 +13,8 @@ win.set_always_on_top('On')
 
 
 def my_callback():
-    win.move(x=ahk.get_mouse_position()[0]-win.get_position()[2]/2, y=ahk.get_mouse_position()[1]-win.get_position()[3]/2,blocking=False);
+    while True:
+        win.move(x=ahk.get_mouse_position()[0]-win.get_position()[2]/2, y=ahk.get_mouse_position()[1]-win.get_position()[3]/2,blocking=False);
     
 
 

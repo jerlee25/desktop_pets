@@ -20,6 +20,7 @@ class Application(tk.Frame):
         # uploading images option
         # customizing menu
     
+    
 root = tk.Tk()
 root.title("A Window!")
 root.geometry("500x500")

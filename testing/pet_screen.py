@@ -3,6 +3,7 @@ from PIL import ImageGrab
 from PIL import Image
 from PIL import ImageTk
 from ahk import AHK
+import random
 
 
 
@@ -11,7 +12,7 @@ from ahk import AHK
 ahk = AHK()
 
 class PetScreen(tk.Frame):
-
+  
     def __init__(self, master):
 
         super().__init__(master)
@@ -19,6 +20,8 @@ class PetScreen(tk.Frame):
       
 
         self.create_widgets()
+        self.dance() # start the adc loop
+
     
     def create_widgets(self):
         # c = tk.Canvas(self,bg="blue",width=SCREENW,height=SCREENW)
@@ -28,7 +31,7 @@ class PetScreen(tk.Frame):
         px = ImageGrab.grab().load()
         img_original = Image.open("images/smiley.jpg")
         print(type(img_original))
-        img_original = img_original.resize((250, 250), Image.ANTIALIAS)
+        img_original = img_original.resize((150, 150), Image.ANTIALIAS)
         
         # plt.imshow(ImageGrab.grab())
         # plt.show()
@@ -54,19 +57,30 @@ class PetScreen(tk.Frame):
         #         c.create_line(x, y, x + 1, y,fill=pixelcolor)
        
 
-     
+    def dance(self):
+        img_original = Image.open("images/flames/flame"+str(random.randint(0,11))+".gif")
+        
+        img_original = img_original.resize((150, 150), Image.ANTIALIAS)
+        
+        # plt.imshow(ImageGrab.grab())
+        # plt.show()
+        img = ImageTk.PhotoImage(img_original)
+        lbl = tk.Label(self, image = img)
+        lbl.image = img
+        lbl.grid(row=0, column = 0, columnspan = 1)
+        
+        self.after(100, self.dance) # ask the mainloop to call this method again in 1,000 milliseconds
 
     
 
-    def reset_game(self):
-        pass
+    
 
 
 root =tk.Tk()
 
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
-root.geometry(str(250)+"x"+str(250))
+root.geometry(str(150)+"x"+str(150))
 
 root.title('PETSCREEN')
 root.resizable(False,False)

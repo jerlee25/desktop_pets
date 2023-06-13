@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+import pyglet
 
 class Application(tk.Frame):
 
@@ -11,7 +12,8 @@ class Application(tk.Frame):
     def create_widget(self):
 
         style = ttk.Style()
-        style.configure("TButton", font = ('calibri', 30, 'bold'), foreground = 'red')
+        pyglet.font.add_file('VT323-Regular.ttf')
+        style.configure("TButton", font = ('VT323-Regular', 30, 'bold'), foreground = 'red')
         style.map("TButton", foreground = [('active', '!disabled', 'red')],
                      background = [('active', 'grey')])
         button = ttk.Button(self, text = "Launch!", style = "TButton", command = root.destroy).grid(

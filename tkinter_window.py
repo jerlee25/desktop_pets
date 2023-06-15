@@ -13,7 +13,7 @@ class Application(tk.Frame):
 
         style = ttk.Style()
         pyglet.font.add_file('VT323-Regular.ttf')
-        style.configure("TButton", font = ('VT323-Regular', 30, 'bold'), foreground = 'red')
+        style.configure("TButton", font = ('VT323', 30, 'bold'), foreground = 'red')
         style.map("TButton", foreground = [('active', '!disabled', 'red')],
                      background = [('active', 'grey')])
         button = ttk.Button(self, text = "Launch!", style = "TButton", command = root.destroy).grid(

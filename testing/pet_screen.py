@@ -17,7 +17,7 @@ class PetScreen(tk.Frame):
 
         super().__init__(master)
         self.grid()
-      
+        self.thing =  1
 
         self.create_widgets()
         self.dance() # start the adc loop
@@ -58,7 +58,10 @@ class PetScreen(tk.Frame):
        
 
     def dance(self):
-        img_original = Image.open("images/flames/flame"+str(random.randint(0,11))+".gif")
+        self.thing+=1
+       
+        self.thing %=11
+        img_original = Image.open("images/flames/flame"+str(self.thing)+".gif")
         
         img_original = img_original.resize((150, 150), Image.ANTIALIAS)
         
@@ -68,7 +71,7 @@ class PetScreen(tk.Frame):
         lbl = tk.Label(self, image = img)
         lbl.image = img
         lbl.grid(row=0, column = 0, columnspan = 1)
-        
+       
         self.after(100, self.dance) # ask the mainloop to call this method again in 1,000 milliseconds
 
     

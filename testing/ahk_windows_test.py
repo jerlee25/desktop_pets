@@ -67,9 +67,10 @@ class specialWindow:
 win = specialWindow(win)
 
 state = 0
+ttime = time
 time = 0
 while True:
-   
+    
     time +=1
     if (time%10==0):
         #win.update()
@@ -91,6 +92,7 @@ while True:
         #print(tarx,tary)
         # state = 0
         win.moveTowards(tarx,tary)
+        
 
         
 

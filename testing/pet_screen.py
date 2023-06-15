@@ -25,12 +25,12 @@ class PetScreen(tk.Frame):
     
     def create_widgets(self):
         # c = tk.Canvas(self,bg="blue",width=SCREENW,height=SCREENW)
-        # c.grid(row=0, column = 0, columnspan = 1)
+        # c.grid(row=0, column = 0, columnspan = 1)a
        
         
         px = ImageGrab.grab().load()
-        img_original = Image.open("images/smiley.jpg")
-        print(type(img_original))
+        img_original = Image.open("images/states/smiley.jpg")
+        #print(type(img_original))
         img_original = img_original.resize((150, 150), Image.ANTIALIAS)
         
         # plt.imshow(ImageGrab.grab())
@@ -72,7 +72,7 @@ class PetScreen(tk.Frame):
         lbl.image = img
         lbl.grid(row=0, column = 0, columnspan = 1)
        
-        self.after(100, self.dance) # ask the mainloop to call this method again in 1,000 milliseconds
+        self.after(100, self.dance) # ask the mainloop to call this metahod again in 1,000 milliseconds
 
     
 

@@ -4,6 +4,7 @@ import math
 import keyboard
 import time
 
+
 ahk = AHK()
 
 

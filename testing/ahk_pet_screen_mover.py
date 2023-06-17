@@ -8,8 +8,8 @@ import time
 ahk = AHK()
 
 
-time.sleep(1)
-print("hi")
+# time.sleep(1)
+# print("hi")
 win = ahk.find_window(title='PETSCREEN') # Find the opened window
 win.always_on_top = 'On'
 win.set_always_on_top('On')
@@ -35,14 +35,14 @@ class specialWindow:
         # self.dy += self.ddy
         self.x += self.dx
         self.y += self.dy
-        print("dx",self.dx,"dy",self.dy)
+        #"dx",self.dx,"dy",self.dy)
         self.win.move(x=self.x,y=self.y,blocking=True)
-        print(self.x,self.y)
+        #print(self.x,self.y)
     def update(self):
         self.x = self.win.get_position()[0]
         self.y = self.win.get_position()[1]
         self.updatePos()
-        print("hi")
+        #print("hi")
     def moveTowards(self,tarx,tary):
         
         xChange = self.x+self.hw-tarx
@@ -68,18 +68,27 @@ class specialWindow:
 win = specialWindow(win)
 
 state = 0
-ttime = time
-time = 0
+
+ttime = 0
+stableTarx = 0
+stableTary = 0
 while True:
     
-    time +=1
-    if (time%10==0):
+    ttime +=1
+
+   
+
+    if (ttime%10==0):
         #win.update()
-        time = 0
+        ttime = 0
     if keyboard.is_pressed("a"):
         state =2
       
-    
+    if keyboard.is_pressed("ctrl+alt+p"):
+        get_mouse_pos = ahk.get_mouse_position(coord_mode="Screen")
+        stableTarx = get_mouse_pos[0]
+        stableTary = get_mouse_pos[1]
+        state = 3
     # if state ==1:
     #     win.move(x=ahk.get_mouse_position()[0]-win.get_position()[2]/2+math.cos(theta)*250, y=ahk.get_mouse_position()[1]-win.get_position()[3]/2+math.sin(theta)*250,blocking=False);
     #     theta+=.07
@@ -88,11 +97,22 @@ while True:
         #print("hi")
         # curx = win.get_position()[2]
         # cury = win.get_position()[3]
-        tarx = ahk.get_mouse_position()[0]
-        tary = ahk.get_mouse_position()[1]
-        #print(tarx,tary)
+        get_mouse_pos = ahk.get_mouse_position(coord_mode="Screen")
+        tarx = get_mouse_pos[0]
+        tary = get_mouse_pos[1]
+        # print(get_mouse_pos)
+        # tarwin = ahk.win_get_from_mouse_position()
+        # tarwinx= tarwin.get_position()[0]+11
+        # tarwiny= tarwin.get_position()[1]+11
+       # print(tarwinx,tarwiny)
+        
+    
+        #print(tarx,tarya
         # state = 0
         win.moveTowards(tarx,tary)
+        # win.moveTowards(tarx+tarwinx,tary+tarwiny)aaaa
+    if state ==3:
+        win.moveTowards(stableTarx,stableTary)
         
 
         

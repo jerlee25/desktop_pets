@@ -8,19 +8,18 @@ import random
 
 
 
-
 ahk = AHK()
 
 class PetScreen(tk.Frame):
   
     def __init__(self, master):
 
-        super().__init__(master)
+        super().__init__(master,width=150,height=150)
         self.grid()
         self.thing =  1
-
-        self.create_widgets()
+        # self.create_widgets()
         self.dance() # start the adc loop
+        # self.last_loc = (0,0)
 
     
     def create_widgets(self):
@@ -28,7 +27,7 @@ class PetScreen(tk.Frame):
         # c.grid(row=0, column = 0, columnspan = 1)a
        
         
-        px = ImageGrab.grab().load()
+        
         img_original = Image.open("images/states/smiley.jpg")
         #print(type(img_original))
         img_original = img_original.resize((150, 150), Image.ANTIALIAS)
@@ -71,6 +70,11 @@ class PetScreen(tk.Frame):
         lbl = tk.Label(self, image = img)
         lbl.image = img
         lbl.grid(row=0, column = 0, columnspan = 1)
+        def callback(event):
+            print ("clicked at", event.x, event.y)
+
+        # frame = tk.Frame(root, width=100, height=100)
+        lbl.bind("<Button-1>", callback)
        
         self.after(100, self.dance) # ask the mainloop to call this metahod again in 1,000 milliseconds
 
@@ -79,16 +83,34 @@ class PetScreen(tk.Frame):
     
 
 
+
+
+
 root =tk.Tk()
 
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
-root.geometry(str(150)+"x"+str(150))
+# screen_width = root.winfo_screenwidth()
+# screen_height = root.winfo_screenheight()
+# root.geometry(str(150)+"x"+str(150))
 
 root.title('PETSCREEN')
-root.resizable(False,False)
+
 view = PetScreen(root)
+root.resizable(False,False)
+# frame = tk.Frame(root)
+
+
 root.mainloop()
+
+# root = tk.Tk()
+
+# def callback(event):
+#     print ("clicked at", event.x, event.y)
+
+# frame = tk.Frame(root, width=100, height=100)
+# frame.bind("<Button-1>", callback)
+# frame.pack()
+
+# root.mainloop()
    
 
 

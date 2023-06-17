@@ -112,10 +112,10 @@ def ahkScreenMover(info):
             win.speed-=10
         win.speed = min(200,win.speed)
         win.speed = max(20,win.speed)
-        print(win.speed)
+        # print(win.speed)a
         
         if (ttime%10==0):
-            #win.update()aaa
+            #win.update()aaaaa
             ttime = 0
         if keyboard.is_pressed("a"):
             state =2
@@ -126,7 +126,7 @@ def ahkScreenMover(info):
             stableTary = get_mouse_pos[1]
             state = 3
         # if state ==1:
-        #     win.move(x=ahk.get_mouse_position()[0]-win.get_position()[2]/2+math.cos(theta)*250, y=ahk.get_mouse_position()[1]-win.get_position()[3]/2+math.sin(theta)*250,blocking=False);
+        #     win.move(x=ahk.get_mouse_posaaition()[0]-win.get_position()[2]/2+math.cos(theta)*250, y=ahk.get_mouse_position()[1]-win.get_position()[3]/2+math.sin(theta)*250,blocking=False);
         #     theta+=.07
 
         if state == 2:

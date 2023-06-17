@@ -10,9 +10,9 @@ ahk = AHK()
 
 # time.sleep(1)
 # print("hi")
-win = ahk.find_window(title='PETSCREEN') # Find the opened window
-win.always_on_top = 'On'
-win.set_always_on_top('On')
+or_win = ahk.find_window(title='PETSCREEN') # Find the opened window
+or_win.always_on_top = 'On'
+or_win.set_always_on_top('On')
 
 theta = 0
 class specialWindow:
@@ -65,21 +65,21 @@ class specialWindow:
         
 
 
-win = specialWindow(win)
+win = specialWindow(or_win)
 
 state = 0
 
 ttime = 0
 stableTarx = 0
 stableTary = 0
-while True:
+while or_win.exists():
     
     ttime +=1
 
    
 
     if (ttime%10==0):
-        #win.update()
+        #win.update()a
         ttime = 0
     if keyboard.is_pressed("a"):
         state =2

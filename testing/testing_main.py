@@ -7,7 +7,7 @@ import tkinter as tk
 from PIL import Image
 from PIL import ImageTk
 from ahk import AHK
-
+from playsound import playsound
 from ahk import AHK
 # import ahkpy
 import math
@@ -125,6 +125,13 @@ def ahkScreenMover(info):
             stableTarx = get_mouse_pos[0]
             stableTary = get_mouse_pos[1]
             state = 3
+        if keyboard.is_pressed("ctrl+alt+q"):
+
+            # :(
+
+            or_win.kill()
+
+
         # if state ==1:
         #     win.move(x=ahk.get_mouse_posaaition()[0]-win.get_position()[2]/2+math.cos(theta)*250, y=ahk.get_mouse_position()[1]-win.get_position()[3]/2+math.sin(theta)*250,blocking=False);
         #     theta+=.07
@@ -184,15 +191,16 @@ def runPetScreen(info):
             # 1 - move
             # 2 - happy
             # 3 - sleep
-            self.state_names = ["idle","move","happy","sleep"]
+            self.state_names = ["idle","move","happy","sleep","still"]
 
 
-            self.orders = [(2,[0,1,0,2]),(2,[0,1]),(2,[0,1,2,3,3]),(2,[0,1,2,3,3])]
+            self.orders = [(2,[0,1,0,2]),(2,[0,1]),(2,[0,1,2,3,3]),(2,[0,1,2,3,3]),(2,[0])]
             self.isHappy = 0
             self.isAsleep = 0
             self.state = 0
             self.hasBeenMoving = 0
-            self.pet_name = "orange_cat"
+            self.pet_names = ["orange_cat","grey_cat","emelem_cat"]
+            self.which_pet = 2
             self.dance() # start the adc loop
 
         
@@ -215,7 +223,7 @@ def runPetScreen(info):
                 self.state = 1
            
             self.thing+=1
-            print(self.state)
+            #print(self.state)
             cur_order= self.orders[self.state]
             cycle_len = cur_order[0] * len(cur_order[1])
             if self.state == 2 and self.thing ==cycle_len:
@@ -223,7 +231,7 @@ def runPetScreen(info):
             self.thing %= cycle_len
             index = self.thing // cur_order[0]
 
-            img_original = Image.open("images/"+self.pet_name+"/" + self.state_names[self.state]+"_"+str(cur_order[1][index])+".png")
+            img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/" + self.state_names[self.state]+"_"+str(cur_order[1][index])+".png")
             
             img_original = img_original.resize((150, 150), Image.ANTIALIAS)
             
@@ -240,6 +248,10 @@ def runPetScreen(info):
                 if (self.info.isMoving==0):
                     self.state = 2
                     self.thing = -1
+                    def play_sound():
+                        playsound("images/"+self.pet_names[self.which_pet]+"/meow.mp3")
+                    thread = Thread(target=play_sound)
+                    thread.start()
             
             def beSleep(event):
                 print ("clicked at", event.x, event.y)
@@ -248,10 +260,25 @@ def runPetScreen(info):
                 if (self.info.isMoving==0):
                     self.state = 3
                     self.thing = -1
+                    def play_sound():
+                        playsound("images/"+self.pet_names[self.which_pet]+"/purr.mp3")
+                    thread = Thread(target=play_sound)
+                    thread.start()
+            def beStill(event):
+                print ("clicked at", event.x, event.y)
+                if (self.info.isMoving==0):
+                    self.state = 4
+                    self.thing = -1
+            def changeCat(event):
+                self.which_pet += 1
+                self.which_pet %= len(self.pet_names)
 
-            # frame = tk.Frame(root, width=100, height=100)a
+
+            # frame = tk.Frame(root, width=100, height=100)aa
             lbl.bind("<Button-1>", beHappy)
             lbl.bind("<Shift-Button-1>", beSleep)
+            lbl.bind("<Control-Button-1>", beStill)
+            lbl.bind("<Shift-Control-Button-1>", changeCat)
         
             self.after(100, self.dance) # ask the mainloop to call this metahod again in 1,000 milliseconds
 

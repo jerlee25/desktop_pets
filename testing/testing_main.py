@@ -218,7 +218,7 @@ def runPetScreen(info):
             self.state = 0
             self.hasBeenMoving = 0
             self.pet_names = ["orange_cat","grey_cat","emelem_cat"]
-            self.which_pet = 2
+            self.which_pet = 0
 
 
             # Creating label before hand so we don't create a bunch of labels and crash

@@ -40,7 +40,8 @@ MAKE_STILL_KEYS = "<Control-Button-1>"
 MAKE_BIG_KEYS = "<Alt-Button-1>"
 MAKE_SMALL_KEYS = "<Shift-Alt-Button-1>"
 
-CHANGE_PET_KEYS = "<Shift-Control-Button-1>"
+CHANGE_PET_KEYS = "<Shift-Alt-Button-1>"
+CHANGE_VARIANT_KEYS = "<Shift-Control-Button-1>"
 
 
 
@@ -336,13 +337,14 @@ def runPetScreen(info):
             self.isAsleep = 0
             self.state = 0
             self.hasBeenMoving = 0
-            self.pet_names = ["orange_cat","grey_cat","emelem_cat","brown_dog"]
-            self.which_pet = 3
+            self.pet_names = [["orange_cat","grey_cat","emelem_cat"],["brown_dog"]]
+            self.which_pet = 0
+            self.which_variant = 0
 
 
             # Creating label before hand so we don't create a bunch of labels and crash
 
-            img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/idle_0.png")
+            img_original = Image.open("images/"+self.pet_names[self.which_pet][self.which_variant]+"/idle_0.png")
             
             img_original = img_original.resize((self.petSize, self.petSize))
             
@@ -361,7 +363,7 @@ def runPetScreen(info):
                   
                     self.thing = -1
                     def play_sound():
-                        playsound("images/"+self.pet_names[self.which_pet]+"/meow.mp3")
+                        playsound("images/"+self.pet_names[self.which_pet][self.which_variant]+"/meow.mp3")
                     thread = Thread(target=play_sound)
                     thread.start()
             
@@ -373,7 +375,7 @@ def runPetScreen(info):
                     self.state = 3
                     self.thing = -1
                     def play_sound():
-                        playsound("images/"+self.pet_names[self.which_pet]+"/purr.mp3")
+                        playsound("images/"+self.pet_names[self.which_pet][self.which_variant]+"/purr.mp3")
                     thread = Thread(target=play_sound)
                     thread.start()
             def beStill(event):
@@ -394,9 +396,14 @@ def runPetScreen(info):
                 self.petSize = max(self.petSize,130)
                 print(self.petSize)
 
-            def changeCat(event):
+            def changePet(event):
                 self.which_pet += 1
                 self.which_pet %= len(self.pet_names)
+                self.which_variant %= len(self.pet_names[self.which_pet])
+            
+            def changeVariant(event):
+                self.which_variant += 1
+                self.which_variant %= len(self.pet_names[self.which_pet])
 
             # Binding stuff to keybinds which is a bit weird with tkinter but this works so I'm not touching it
             
@@ -405,7 +412,8 @@ def runPetScreen(info):
             self.lbl.bind(MAKE_STILL_KEYS, beStill)
             self.lbl.bind(MAKE_BIG_KEYS, beBig)
             self.lbl.bind(MAKE_SMALL_KEYS, beSmall)
-            self.lbl.bind(CHANGE_PET_KEYS, changeCat)
+            self.lbl.bind(CHANGE_PET_KEYS, changePet)
+            self.lbl.bind(CHANGE_VARIANT_KEYS, changeVariant)
 
             # Run the repeating loop
 
@@ -447,7 +455,7 @@ def runPetScreen(info):
             self.thing %= cycle_len
             index = self.thing // cur_order[0]
 
-            img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/" + self.state_names[self.state]+"_"+str(cur_order[1][index])+".png")
+            img_original = Image.open("images/"+self.pet_names[self.which_pet][self.which_variant]+"/" + self.state_names[self.state]+"_"+str(cur_order[1][index])+".png")
             
             img_original = img_original.resize((self.petSize, self.petSize))
             

@@ -11,6 +11,9 @@ from playsound import playsound
 from ahk import AHK
 import math
 import keyboard
+# import pyautogui
+# from screeninfo import get_monitors
+
 
 
 ahk = AHK()
@@ -20,6 +23,7 @@ ahk = AHK()
 
 FOLLOW_MOUSE_KEYS = "ctrl+alt+a"
 GO_TO_POSITION_KEYS = "ctrl+alt+p"
+BECOME_SCREENSAVER_KEYS = "ctrl+alt+s"
 
 QUIT_KEYS = "ctrl+alt+q"
 
@@ -138,6 +142,29 @@ def ahkScreenMover(info):
     stableTarx = 0
     stableTary = 0
 
+    curdx = 0
+    curdy = 0
+
+
+    # Get size of screen
+
+    root =tk.Tk()
+    screen_width = 2256
+    screen_height = 1504
+
+    # Ok for some reason when I run these things it changes the size of the other window?
+    # Which is a bit odd, maybe weird things for connecting too each other?
+    # So I'm just going to have a defauly screen width and height cause that works well enough and can be changed easily enough
+
+
+    # for m in get_monitors():
+        
+    #     screen_width = m.width
+    #     screen_height = m.height
+    # screen_width, screen_height = pyautogui.size()
+
+
+
     # Probably a cleaner way to this than a while loop, but moving windows is already slow as is
 
     while or_win.exists():
@@ -170,6 +197,24 @@ def ahkScreenMover(info):
             stableTary = get_mouse_pos[1]
             state = 3
 
+        # Screensaver code I think
+
+        if keyboard.is_pressed(BECOME_SCREENSAVER_KEYS):
+            get_mouse_pos = ahk.get_mouse_position(coord_mode="Screen")
+
+            tarx = get_mouse_pos[0]
+            tary = get_mouse_pos[1]
+
+            xChange = win.x+win.hw-tarx
+            yChange = win.y+win.hh-tary
+
+            otherChange = math.sqrt(xChange**2+yChange**2)
+
+            curdx = -1 * win.speed * xChange/otherChange
+            curdy = -1* win.speed * yChange/otherChange
+
+            state = 4
+
         if keyboard.is_pressed(QUIT_KEYS):
 
             # :(
@@ -191,6 +236,29 @@ def ahkScreenMover(info):
 
         if state ==3:
             win.moveTowards(stableTarx,stableTary)
+
+        if state ==4:
+            
+            win.x = win.win.get_position()[0]
+            win.y = win.win.get_position()[1]
+            # print(win.x,win.y)
+            win.x += curdx
+            win.y += curdy
+            if (win.x<0):
+                win.x = 2*0-win.x
+                curdx = -curdx
+            if (win.y <0):
+                win.y = 2*0-win.y
+                curdy = -curdy
+            if (win.x +2*win.hw>screen_width):
+                win.x = 2*screen_width - win.x -4*win.hw
+                curdx = -curdx
+            if (win.y +2*win.hh>screen_height):
+                win.y = 2*screen_height - win.y -4*win.hh
+                curdy = -curdy
+
+            win.win.move(x=win.x,y=win.y,blocking=True)
+            
             
 
     
@@ -245,7 +313,7 @@ def runPetScreen(info):
 
             img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/idle_0.png")
             
-            img_original = img_original.resize((150, 150), Image.ANTIALIAS)
+            img_original = img_original.resize((150, 150))
             
             
             img = ImageTk.PhotoImage(img_original)
@@ -335,7 +403,7 @@ def runPetScreen(info):
 
             img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/" + self.state_names[self.state]+"_"+str(cur_order[1][index])+".png")
             
-            img_original = img_original.resize((150, 150), Image.ANTIALIAS)
+            img_original = img_original.resize((150, 150))
             
             img = ImageTk.PhotoImage(img_original)
            

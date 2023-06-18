@@ -201,6 +201,55 @@ def runPetScreen(info):
             self.hasBeenMoving = 0
             self.pet_names = ["orange_cat","grey_cat","emelem_cat"]
             self.which_pet = 2
+            img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/idle_0.png")
+            
+            img_original = img_original.resize((150, 150), Image.ANTIALIAS)
+            
+            # print(self.info.isMoviang)aa
+            # plt.imshow(ImageGrab.grab(a))a
+            # plt.show()
+            
+            img = ImageTk.PhotoImage(img_original)
+            self.lbl = tk.Label(self, image = img)
+            self.lbl.image = img
+            self.lbl.grid(row=0, column = 0, columnspan = 1)
+            def beHappy(event):
+                print ("clicked at", event.x, event.y)
+                #self.isHappy = 1
+                if (self.info.isMoving==0):
+                    self.state = 2
+                    self.thing = -1
+                    def play_sound():
+                        playsound("images/"+self.pet_names[self.which_pet]+"/meow.mp3")
+                    thread = Thread(target=play_sound)
+                    thread.start()
+            
+            def beSleep(event):
+                print ("clicked at", event.x, event.y)
+                #self.isHappy = 1a
+                print(event.char)
+                if (self.info.isMoving==0):
+                    self.state = 3
+                    self.thing = -1
+                    def play_sound():
+                        playsound("images/"+self.pet_names[self.which_pet]+"/purr.mp3")
+                    thread = Thread(target=play_sound)
+                    thread.start()
+            def beStill(event):
+                print ("clicked at", event.x, event.y)
+                if (self.info.isMoving==0):
+                    self.state = 4
+                    self.thing = -1
+            def changeCat(event):
+                self.which_pet += 1
+                self.which_pet %= len(self.pet_names)
+
+
+            # frame = tk.Frame(root, width=100, height=100)aa
+            self.lbl.bind("<Button-1>", beHappy)
+            self.lbl.bind("<Shift-Button-1>", beSleep)
+            self.lbl.bind("<Control-Button-1>", beStill)
+            self.lbl.bind("<Shift-Control-Button-1>", changeCat)
             self.dance() # start the adc loop
 
         
@@ -238,47 +287,13 @@ def runPetScreen(info):
             # print(self.info.isMoviang)aa
             # plt.imshow(ImageGrab.grab(a))a
             # plt.show()
-            img = ImageTk.PhotoImage(img_original)
-            lbl = tk.Label(self, image = img)
-            lbl.image = img
-            lbl.grid(row=0, column = 0, columnspan = 1)
-            def beHappy(event):
-                print ("clicked at", event.x, event.y)
-                #self.isHappy = 1
-                if (self.info.isMoving==0):
-                    self.state = 2
-                    self.thing = -1
-                    def play_sound():
-                        playsound("images/"+self.pet_names[self.which_pet]+"/meow.mp3")
-                    thread = Thread(target=play_sound)
-                    thread.start()
             
-            def beSleep(event):
-                print ("clicked at", event.x, event.y)
-                #self.isHappy = 1a
-                print(event.char)
-                if (self.info.isMoving==0):
-                    self.state = 3
-                    self.thing = -1
-                    def play_sound():
-                        playsound("images/"+self.pet_names[self.which_pet]+"/purr.mp3")
-                    thread = Thread(target=play_sound)
-                    thread.start()
-            def beStill(event):
-                print ("clicked at", event.x, event.y)
-                if (self.info.isMoving==0):
-                    self.state = 4
-                    self.thing = -1
-            def changeCat(event):
-                self.which_pet += 1
-                self.which_pet %= len(self.pet_names)
-
-
-            # frame = tk.Frame(root, width=100, height=100)aa
-            lbl.bind("<Button-1>", beHappy)
-            lbl.bind("<Shift-Button-1>", beSleep)
-            lbl.bind("<Control-Button-1>", beStill)
-            lbl.bind("<Shift-Control-Button-1>", changeCat)
+            img = ImageTk.PhotoImage(img_original)
+            # selflbl = tk.Label(self, image = img)
+            self.lbl.configure(image=img)
+            self.lbl.image = img
+            # lbl.grid(row=0, column = 0, columnspan = 1)
+            
         
             self.after(100, self.dance) # ask the mainloop to call this metahod again in 1,000 milliseconds
 

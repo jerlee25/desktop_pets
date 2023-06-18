@@ -40,7 +40,7 @@ MAKE_STILL_KEYS = "<Control-Button-1>"
 MAKE_BIG_KEYS = "<Alt-Button-1>"
 MAKE_SMALL_KEYS = "<Shift-Alt-Button-1>"
 
-CHANGE_PET_KEYS = "<Shift-Alt-Button-1>"
+CHANGE_PET_KEYS = "<Control-Alt-Button-1>"
 CHANGE_VARIANT_KEYS = "<Shift-Control-Button-1>"
 
 

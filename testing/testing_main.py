@@ -117,7 +117,7 @@ def ahkScreenMover(info):
         if (ttime%10==0):
             #win.update()aaaaa
             ttime = 0
-        if keyboard.is_pressed("a"):
+        if keyboard.is_pressed("ctrl+alt+a"):
             state =2
         
         if keyboard.is_pressed("ctrl+alt+p"):
@@ -175,66 +175,83 @@ def runPetScreen(info):
             super().__init__(master,width=150,height=150)
             self.grid()
             self.info = info
-            self.thing =  1
+            self.thing =  -1
             # self.create_widgets()
-            self.dance() # start the adc loop
+            
             # self.last_loc = (0,0)
 
+            # 0 - idle
+            # 1 - move
+            # 2 - happy
+            # 3 - sleep
+            self.state_names = ["idle","move","happy","sleep"]
+
+
+            self.orders = [(2,[0,1,0,2]),(2,[0,1]),(2,[0,1,2,3,3]),(2,[0,1,2,3,3])]
+            self.isHappy = 0
+            self.isAsleep = 0
+            self.state = 0
+            self.hasBeenMoving = 0
+            self.pet_name = "orange_cat"
+            self.dance() # start the adc loop
+
         
-        def create_widgets(self):
-            # c = tk.Canvas(self,bg="blue",width=SCREENW,height=SCREENW)
-            # c.grid(row=0, column = 0, columnspan = 1)a
-        
-            
-            
-            img_original = Image.open("images/states/smiley.jpg")
-            #print(type(img_original))
-            img_original = img_original.resize((150, 150), Image.ANTIALIAS)
-            
-            # plt.imshow(ImageGrab.grab())
-            # plt.show()
-            img = ImageTk.PhotoImage(img_original)
-            lbl = tk.Label(self, image = img)
-            lbl.image = img
-            lbl.grid(row=0, column = 0, columnspan = 1)
-                    
-            # for x in range(0,int(SCREENW),1):
-            #     for y in range(0,int(SCREENH),1):
-            #         # pixelcolor = ahk.pixel_get_color(x,y)
-            #         # print(pixelcolor)
-            #         color = px[x, y]
-                    
-                    
-            #         pixelcolor = '#{:02x}{:02x}{:02x}'.format(color[0], color[1], color[2])
-            #         # print(color)
-            #         # print(pixelcolor)
-            #         #pixelcolor = "#"+pixelcolor[2:]
-                    
-            #         # pixelcolor ="green"
-                    
-            #         c.create_line(x, y, x + 1, y,fill=paixelcolor)
+   
+          
         
 
         def dance(self):
+          
+            
+            if (self.hasBeenMoving ==0 and self.info.isMoving ==1):
+                self.hasBeenMoving =1
+                self.thing = -1
+                self.state  = 1
+            if self.hasBeenMoving ==1 and self.info.isMoving == 0 and self.state ==1:
+                self.hasBeenMoving = 0
+                self.thing = -1
+                self.state = 0
+            if self.info.isMoving==1:
+                self.state = 1
+           
             self.thing+=1
-        
-            self.thing %=11
-            img_original = Image.open("images/flames/flame"+str(self.thing)+".gif")
+            print(self.state)
+            cur_order= self.orders[self.state]
+            cycle_len = cur_order[0] * len(cur_order[1])
+            if self.state == 2 and self.thing ==cycle_len:
+                self.state = 0
+            self.thing %= cycle_len
+            index = self.thing // cur_order[0]
+
+            img_original = Image.open("images/"+self.pet_name+"/" + self.state_names[self.state]+"_"+str(cur_order[1][index])+".png")
             
             img_original = img_original.resize((150, 150), Image.ANTIALIAS)
             
-            # print(self.info.isMoving)
-            # plt.imshow(ImageGrab.grab(a))
+            # print(self.info.isMoviang)aa
+            # plt.imshow(ImageGrab.grab(a))a
             # plt.show()
             img = ImageTk.PhotoImage(img_original)
             lbl = tk.Label(self, image = img)
             lbl.image = img
             lbl.grid(row=0, column = 0, columnspan = 1)
-            def callback(event):
+            def beHappy(event):
                 print ("clicked at", event.x, event.y)
+                #self.isHappy = 1
+                if (self.info.isMoving==0):
+                    self.state = 2
+                    self.thing = -1
+            
+            def beSleep(event):
+                print ("clicked at", event.x, event.y)
+                #self.isHappy = 1a
+                print(event.char)
+                if (self.info.isMoving==0):
+                    self.state = 3
+                    self.thing = -1
 
-            # frame = tk.Frame(root, width=100, height=100)
-            lbl.bind("<Button-1>", callback)
+            # frame = tk.Frame(root, width=100, height=100)a
+            lbl.bind("<Button-1>", beHappy)
+            lbl.bind("<Shift-Button-1>", beSleep)
         
             self.after(100, self.dance) # ask the mainloop to call this metahod again in 1,000 milliseconds
 

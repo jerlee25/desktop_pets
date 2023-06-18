@@ -23,6 +23,7 @@ ahk = AHK()
 
 FOLLOW_MOUSE_KEYS = "ctrl+alt+a"
 GO_TO_POSITION_KEYS = "ctrl+alt+p"
+STOP_THERE_KEYS = "ctrl+alt+d"
 BECOME_SCREENSAVER_KEYS = "ctrl+alt+s"
 
 QUIT_KEYS = "ctrl+alt+q"
@@ -35,6 +36,11 @@ SPEED_DOWN_KEYS = "ctrl+alt+down"
 MAKE_HAPPY_KEYS = "<Button-1>"
 MAKE_SLEEPY_KEYS = "<Shift-Button-1>"
 MAKE_STILL_KEYS = "<Control-Button-1>"
+
+MAKE_BIG_KEYS = "<Alt-Button-1>"
+MAKE_SMALL_KEYS = "<Shift-Alt-Button-1>"
+
+
 CHANGE_PET_KEYS = "<Shift-Control-Button-1>"
 
 
@@ -71,19 +77,22 @@ def ahkScreenMover(info):
             # Most of this is like self explanatory
 
             self.win = win
-            self.x = self.win.get_position()[0]
-            self.y = self.win.get_position()[1]
+            win_pos = self.win.get_position()
+            self.x = win_pos[0]
+            self.y = win_pos[1]
             self.speed = 50
             self.acceleration = 0
             self.dx = 0
             self.dy = 0
-            self.width = win.get_position()[2]
-            self.height = win.get_position()[3]
+            
+            
+            self.width = win_pos[2]
+            self.height = win_pos[3]
 
             # half height and half width because I didn't want to do too much math like elsewhere
-
-            self.hw=win.get_position()[2]/2
-            self.hh = win.get_position()[3]/2
+            
+            self.hw=win_pos[2]/2
+            self.hh = win_pos[3]/2
             
         def updatePos(self):
            
@@ -103,6 +112,14 @@ def ahkScreenMover(info):
             self.updatePos()
             
         def moveTowards(self,tarx,tary):
+            win_pos = win.win.get_position()
+            self.x = win_pos[0]
+            self.y = win_pos[1]
+         
+            self.width = win_pos[2]
+            self.height = win_pos[3]
+            self.hw=win_pos[2]/2
+            self.hh = win_pos[3]/2
             
             # Target a thing so that the center of the window starts moving towards a certain point
 
@@ -185,7 +202,10 @@ def ahkScreenMover(info):
 
 
          # Set to follow mouse
-
+        if keyboard.is_pressed(STOP_THERE_KEYS):
+            state = 0
+            win.info.isMoving = 0
+            
         if keyboard.is_pressed(FOLLOW_MOUSE_KEYS):
             state =2
         
@@ -195,6 +215,7 @@ def ahkScreenMover(info):
             get_mouse_pos = ahk.get_mouse_position(coord_mode="Screen")
             stableTarx = get_mouse_pos[0]
             stableTary = get_mouse_pos[1]
+            
             state = 3
 
         # Screensaver code I think
@@ -214,6 +235,7 @@ def ahkScreenMover(info):
             curdy = -1* win.speed * yChange/otherChange
 
             state = 4
+            win.info.isMoving = 0
 
         if keyboard.is_pressed(QUIT_KEYS):
 
@@ -235,12 +257,18 @@ def ahkScreenMover(info):
         # Move towards that one recorded spot
 
         if state ==3:
+           
             win.moveTowards(stableTarx,stableTary)
 
         if state ==4:
-            
-            win.x = win.win.get_position()[0]
-            win.y = win.win.get_position()[1]
+            win_pos = win.win.get_position()
+            win.x = win_pos[0]
+            win.y = win_pos[1]
+         
+            win.width = win_pos[2]
+            win.height = win_pos[3]
+            win.hw=win_pos[2]/2
+            win.hh = win_pos[3]/2
             # print(win.x,win.y)
             win.x += curdx
             win.y += curdy
@@ -258,6 +286,7 @@ def ahkScreenMover(info):
                 curdy = -curdy
 
             win.win.move(x=win.x,y=win.y,blocking=True)
+
             
             
 
@@ -301,6 +330,7 @@ def runPetScreen(info):
 
             # Recording state stuff
 
+            self.petSize = 200
             self.isHappy = 0
             self.isAsleep = 0
             self.state = 0
@@ -313,7 +343,7 @@ def runPetScreen(info):
 
             img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/idle_0.png")
             
-            img_original = img_original.resize((150, 150))
+            img_original = img_original.resize((self.petSize, self.petSize))
             
             
             img = ImageTk.PhotoImage(img_original)
@@ -327,6 +357,7 @@ def runPetScreen(info):
                
                 if (self.info.isMoving==0):
                     self.state = 2
+                  
                     self.thing = -1
                     def play_sound():
                         playsound("images/"+self.pet_names[self.which_pet]+"/meow.mp3")
@@ -334,8 +365,10 @@ def runPetScreen(info):
                     thread.start()
             
             def beSleep(event):
-              
-                if (self.info.isMoving==0):
+                if self.state==3:
+                    self.state = 0
+                    self.thing = -1
+                elif (self.info.isMoving==0):
                     self.state = 3
                     self.thing = -1
                     def play_sound():
@@ -350,6 +383,16 @@ def runPetScreen(info):
                     self.state = 4
                     self.thing = -1
                 
+            def beBig(event):
+                self.petSize += 10
+                self.petSize = min(self.petSize,900)
+                print(self.petSize)
+            
+            def beSmall(event):
+                self.petSize -= 10
+                self.petSize = max(self.petSize,130)
+                print(self.petSize)
+
             def changeCat(event):
                 self.which_pet += 1
                 self.which_pet %= len(self.pet_names)
@@ -359,6 +402,8 @@ def runPetScreen(info):
             self.lbl.bind(MAKE_HAPPY_KEYS, beHappy)
             self.lbl.bind(MAKE_SLEEPY_KEYS, beSleep)
             self.lbl.bind(MAKE_STILL_KEYS, beStill)
+            self.lbl.bind(MAKE_BIG_KEYS, beBig)
+            self.lbl.bind(MAKE_SMALL_KEYS, beSmall)
             self.lbl.bind(CHANGE_PET_KEYS, changeCat)
 
             # Run the repeating loop
@@ -403,7 +448,7 @@ def runPetScreen(info):
 
             img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/" + self.state_names[self.state]+"_"+str(cur_order[1][index])+".png")
             
-            img_original = img_original.resize((150, 150))
+            img_original = img_original.resize((self.petSize, self.petSize))
             
             img = ImageTk.PhotoImage(img_original)
            

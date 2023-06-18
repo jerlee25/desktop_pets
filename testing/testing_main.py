@@ -399,7 +399,7 @@ def runPetScreen(info):
             def changePet(event):
                 self.which_pet += 1
                 self.which_pet %= len(self.pet_names)
-                self.which_variant %= len(self.pet_names[self.which_pet])
+                self.which_variant =0
             
             def changeVariant(event):
                 self.which_variant += 1

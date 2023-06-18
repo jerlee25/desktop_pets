@@ -9,39 +9,44 @@ from PIL import ImageTk
 from ahk import AHK
 from playsound import playsound
 from ahk import AHK
-# import ahkpy
 import math
 import keyboard
 
-print("hi")
+
 ahk = AHK()
 
+
+# Class that can store information between the two threads
 class UsefulInfo():
     def __init__(self):
         self.isMoving = 0
 
-def task():
-    pass
+
+# Run screen mover code (originally from ahk_pet_screen_mover.py)
 
 def ahkScreenMover(info):
-    print("Hi")
     
+    
+    # Waiting for other screen to appear
 
     sleep(1)
-    # from ahk_pet_screen_mover import specialWindow
-    # ahk = AHK()
+   
+    # Finding the window that we're going to be moving, settting it to the top always
 
-
-# time.sleep(1)
-# print("hi")
-    or_win = ahk.find_window(title='PETSCREEN') # Find athe opened window
+    or_win = ahk.find_window(title='PETSCREEN') 
     or_win.always_on_top = 'On'
     or_win.set_always_on_top('On')
 
-    theta = 0
+    # Special window class to do stuff since idk how the normal window class works
     class specialWindow:
         def __init__(self,win,info):
+
+            # info stores the special info class for communication
+
             self.info = info
+
+            # Most of this is like self explanatory
+
             self.win = win
             self.x = self.win.get_position()[0]
             self.y = self.win.get_position()[1]
@@ -51,25 +56,33 @@ def ahkScreenMover(info):
             self.dy = 0
             self.width = win.get_position()[2]
             self.height = win.get_position()[3]
+
+            # half height and half width because I didn't want to do too much math like elsewhere
+
             self.hw=win.get_position()[2]/2
             self.hh = win.get_position()[3]/2
-            # self.ddx = 0
-            # self.ddy = 0
+            
         def updatePos(self):
-            # self.dx += self.ddx
-            # self.dy += self.ddy
+           
+            # Moves to new projected location
+
             self.x += self.dx
             self.y += self.dy
-            #"dx",self.dx,"dy",self.dy)
+
             self.win.move(x=self.x,y=self.y,blocking=True)
-            #print(self.x,self.y)
+            
         def update(self):
+
+            # Gets actual location, then updates it
+
             self.x = self.win.get_position()[0]
             self.y = self.win.get_position()[1]
             self.updatePos()
-            #print("hi")aaaaaa
+            
         def moveTowards(self,tarx,tary):
             
+            # Target a thing so that the center of the window starts moving towards a certain point
+
             xChange = self.x+self.hw-tarx
             yChange = self.y+self.hh-tary
             otherChange = math.sqrt(xChange**2+yChange**2)
@@ -90,36 +103,48 @@ def ahkScreenMover(info):
             self.dx = -self.acceleration * self.speed * xChange/otherChange
             self.dy = -self.acceleration * self.speed * yChange/otherChange
             self.updatePos()
-            #print("dx",self.dx,"dy",self.day)
+            
             
 
-
+    # Passes in the original window + the info object
     win = specialWindow(or_win,info)
 
-    state = 0
 
-    ttime = 0
+    # Tracking type of movement I think
+    state = 0
+   
+
+    # targetting a speciic location that doesn't change
+
     stableTarx = 0
     stableTary = 0
+
+    # Probably a cleaner way to this than a while loop, but moving windows is already slow as is
+
     while or_win.exists():
         
-        ttime +=1
+     
 
+
+        # Keybinds for speeding up the window's speed
 
         if keyboard.is_pressed("ctrl+alt+up"):
             win.speed+=10
         if keyboard.is_pressed("ctrl+alt+down"):
             win.speed-=10
+
         win.speed = min(200,win.speed)
         win.speed = max(20,win.speed)
-        # print(win.speed)a
-        
-        if (ttime%10==0):
-            #win.update()aaaaa
-            ttime = 0
+     
+
+
+         # Set to follow mouse
+
         if keyboard.is_pressed("ctrl+alt+a"):
             state =2
         
+        # Go to the position mouse is currently at at that moment but not like follow just record it and go there
+
         if keyboard.is_pressed("ctrl+alt+p"):
             get_mouse_pos = ahk.get_mouse_position(coord_mode="Screen")
             stableTarx = get_mouse_pos[0]
@@ -132,60 +157,47 @@ def ahkScreenMover(info):
             or_win.kill()
 
 
-        # if state ==1:
-        #     win.move(x=ahk.get_mouse_posaaition()[0]-win.get_position()[2]/2+math.cos(theta)*250, y=ahk.get_mouse_position()[1]-win.get_position()[3]/2+math.sin(theta)*250,blocking=False);
-        #     theta+=.07
-
+     
+        # Move towards mouse's current location
         if state == 2:
-            #print("hi")
-            # curx = win.get_position()[2]
-            # cury = win.get_position()[3]
+          
             get_mouse_pos = ahk.get_mouse_position(coord_mode="Screen")
             tarx = get_mouse_pos[0]
             tary = get_mouse_pos[1]
-            # print(get_mouse_pos)
-            # tarwin = ahk.win_get_from_mouse_position()
-            # tarwinx= tarwin.get_position()[0]+11
-            # tarwiny= tarwin.get_position()[1]+11
-        # print(tarwinx,tarwiny)
             
-        
-            #print(tarx,tarya
-            # state = 0
             win.moveTowards(tarx,tary)
-            # win.moveTowards(tarx+tarwinx,tary+tarwiny)aaaa
+        
+        # Move towards that one recorded spot
+
         if state ==3:
             win.moveTowards(stableTarx,stableTary)
             
 
-            
-
-
-    # ahk.add_hotkey('^+LButton', callback=my_callback)
-    # ahk.start_hotkeys()  # start the hotkey process thread
-    # ahk.block_forever()  
-    # ahk.add_hotstring('btw', my_callback) # call python funaction in response to the hotstring
+    
 
 
     
 
-
+# Run pet screen code (originally from pet_screen.py)
     
 def runPetScreen(info):
-    print("hi2")
-    # from pet_screen import PetScreen
+    
+    # Make the pet screen, take in an info object for communication
     
     class PetScreen(tk.Frame):
     
         def __init__(self, master,info):
 
+            # Set a certain size, not exactly sure how to use tkinter properly, just took old code and messed with it until it worked
+
             super().__init__(master,width=150,height=150)
             self.grid()
             self.info = info
+
+            # Because it starts by incrementing it in the code so we start at -1 so it goes to 0 haha
+
             self.thing =  -1
-            # self.create_widgets()
-            
-            # self.last_loc = (0,0)
+          
 
             # 0 - idle
             # 1 - move
@@ -194,28 +206,37 @@ def runPetScreen(info):
             self.state_names = ["idle","move","happy","sleep","still"]
 
 
+            # Order of frames for each state in each array in each tuple
+            # First thing in each tuple is like delay before changing
+
             self.orders = [(2,[0,1,0,2]),(2,[0,1]),(2,[0,1,2,3,3]),(2,[0,1,2,3,3]),(2,[0])]
+
+            # Recording state stuff
+
             self.isHappy = 0
             self.isAsleep = 0
             self.state = 0
             self.hasBeenMoving = 0
             self.pet_names = ["orange_cat","grey_cat","emelem_cat"]
             self.which_pet = 2
+
+
+            # Creating label before hand so we don't create a bunch of labels and crash
+
             img_original = Image.open("images/"+self.pet_names[self.which_pet]+"/idle_0.png")
             
             img_original = img_original.resize((150, 150), Image.ANTIALIAS)
             
-            # print(self.info.isMoviang)aa
-            # plt.imshow(ImageGrab.grab(a))a
-            # plt.show()
             
             img = ImageTk.PhotoImage(img_original)
             self.lbl = tk.Label(self, image = img)
             self.lbl.image = img
             self.lbl.grid(row=0, column = 0, columnspan = 1)
+
+            # Reactions to being clicked and stuff
+
             def beHappy(event):
-                print ("clicked at", event.x, event.y)
-                #self.isHappy = 1
+               
                 if (self.info.isMoving==0):
                     self.state = 2
                     self.thing = -1
@@ -225,9 +246,7 @@ def runPetScreen(info):
                     thread.start()
             
             def beSleep(event):
-                print ("clicked at", event.x, event.y)
-                #self.isHappy = 1a
-                print(event.char)
+              
                 if (self.info.isMoving==0):
                     self.state = 3
                     self.thing = -1
@@ -236,7 +255,7 @@ def runPetScreen(info):
                     thread = Thread(target=play_sound)
                     thread.start()
             def beStill(event):
-                print ("clicked at", event.x, event.y)
+               
                 if (self.info.isMoving==0):
                     self.state = 4
                     self.thing = -1
@@ -244,22 +263,27 @@ def runPetScreen(info):
                 self.which_pet += 1
                 self.which_pet %= len(self.pet_names)
 
-
-            # frame = tk.Frame(root, width=100, height=100)aa
+            # Binding stuff to keybinds which is a bit weird with tkinter but this works so I'm not touching it
+            
             self.lbl.bind("<Button-1>", beHappy)
             self.lbl.bind("<Shift-Button-1>", beSleep)
             self.lbl.bind("<Control-Button-1>", beStill)
             self.lbl.bind("<Shift-Control-Button-1>", changeCat)
-            self.dance() # start the adc loop
+
+            # Run the repeating loop
+
+            self.dance() 
 
         
    
           
-        
+        # The repeatng loop
 
         def dance(self):
           
             
+            # Checks for when it starts moving and stops moving and just moving stuff in general
+
             if (self.hasBeenMoving ==0 and self.info.isMoving ==1):
                 self.hasBeenMoving =1
                 self.thing = -1
@@ -271,8 +295,14 @@ def runPetScreen(info):
             if self.info.isMoving==1:
                 self.state = 1
            
+            # Iterating
+
             self.thing+=1
-            #print(self.state)
+           
+            # Cycling like a bicycle but not actually
+            # Does a bit of stuff with the orders to just find the next frame and when it changes that
+            # Threw this together like instinctively and it sort of just worked so I'm keeping it like that
+
             cur_order= self.orders[self.state]
             cycle_len = cur_order[0] * len(cur_order[1])
             if self.state == 2 and self.thing ==cycle_len:
@@ -284,61 +314,43 @@ def runPetScreen(info):
             
             img_original = img_original.resize((150, 150), Image.ANTIALIAS)
             
-            # print(self.info.isMoviang)aa
-            # plt.imshow(ImageGrab.grab(a))a
-            # plt.show()
-            
             img = ImageTk.PhotoImage(img_original)
-            # selflbl = tk.Label(self, image = img)
+           
             self.lbl.configure(image=img)
             self.lbl.image = img
-            # lbl.grid(row=0, column = 0, columnspan = 1)
-            
         
-            self.after(100, self.dance) # ask the mainloop to call this metahod again in 1,000 milliseconds
+            # Calls itself again
 
-        
+            self.after(100, self.dance)
 
         
 
+        
 
 
 
+    # Idk a bunch of tkinter stuff that makes it work ig
 
     root =tk.Tk()
-
-    # screen_width = root.winfo_screenwidth()
-    # screen_height = root.winfo_screenheight()
-    # root.geometry(str(150)+"x"+str(150))
 
     root.title('PETSCREEN')
 
     view = PetScreen(root,info)
     root.resizable(False,False)
-    # frame = tk.Frame(root)
-
 
     root.mainloop()
 
-    # root = tk.Tk()
-
-    # def callback(event):
-    #     print ("clicked at", event.x, event.y)
-
-    # frame = tk.Frame(root, width=100, height=100)
-    # frame.bind("<Button-1>", callback)
-    # frame.pack()
-
-    # root.mainloop()
-   
 
 
 
-    
+
+
+
+# Tracking time that the threading thing I looked at had and I'm keeping it because it's fun
 
 start_time = perf_counter()
 
-# create two new threads
+
 stuff = UsefulInfo()
 t1 = Thread(target=lambda:ahkScreenMover(stuff))
 t2 = Thread(target=lambda:runPetScreen(stuff))
@@ -346,8 +358,6 @@ t2 = Thread(target=lambda:runPetScreen(stuff))
 t2.start()
 t1.start()
 
-
-# wait for the threads to complete
 t1.join()
 t2.join()
 

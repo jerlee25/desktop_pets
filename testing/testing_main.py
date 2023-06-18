@@ -16,6 +16,25 @@ import keyboard
 ahk = AHK()
 
 
+# CONTROLLING WINDOW MOVEMENT KEYBINDS
+
+FOLLOW_MOUSE_KEYS = "ctrl+alt+a"
+GO_TO_POSITION_KEYS = "ctrl+alt+p"
+
+QUIT_KEYS = "ctrl+alt+q"
+
+SPEED_UP_KEYS = "ctrl+alt+up"
+SPEED_DOWN_KEYS = "ctrl+alt+down"
+
+# WINDOW INTERACTION KEYBINDS
+
+MAKE_HAPPY_KEYS = "<Button-1>"
+MAKE_SLEEPY_KEYS = "<Shift-Button-1>"
+MAKE_STILL_KEYS = "<Control-Button-1>"
+CHANGE_PET_KEYS = "<Shift-Control-Button-1>"
+
+
+
 # Class that can store information between the two threads
 class UsefulInfo():
     def __init__(self):
@@ -128,9 +147,9 @@ def ahkScreenMover(info):
 
         # Keybinds for speeding up the window's speed
 
-        if keyboard.is_pressed("ctrl+alt+up"):
+        if keyboard.is_pressed(SPEED_UP_KEYS):
             win.speed+=10
-        if keyboard.is_pressed("ctrl+alt+down"):
+        if keyboard.is_pressed(SPEED_DOWN_KEYS):
             win.speed-=10
 
         win.speed = min(200,win.speed)
@@ -140,17 +159,18 @@ def ahkScreenMover(info):
 
          # Set to follow mouse
 
-        if keyboard.is_pressed("ctrl+alt+a"):
+        if keyboard.is_pressed(FOLLOW_MOUSE_KEYS):
             state =2
         
         # Go to the position mouse is currently at at that moment but not like follow just record it and go there
 
-        if keyboard.is_pressed("ctrl+alt+p"):
+        if keyboard.is_pressed(GO_TO_POSITION_KEYS):
             get_mouse_pos = ahk.get_mouse_position(coord_mode="Screen")
             stableTarx = get_mouse_pos[0]
             stableTary = get_mouse_pos[1]
             state = 3
-        if keyboard.is_pressed("ctrl+alt+q"):
+
+        if keyboard.is_pressed(QUIT_KEYS):
 
             # :(
 
@@ -255,20 +275,23 @@ def runPetScreen(info):
                     thread = Thread(target=play_sound)
                     thread.start()
             def beStill(event):
-               
-                if (self.info.isMoving==0):
+                if (self.state == 4):
+                    self.state = 0
+                    self.thing = -1
+                elif (self.info.isMoving==0):
                     self.state = 4
                     self.thing = -1
+                
             def changeCat(event):
                 self.which_pet += 1
                 self.which_pet %= len(self.pet_names)
 
             # Binding stuff to keybinds which is a bit weird with tkinter but this works so I'm not touching it
             
-            self.lbl.bind("<Button-1>", beHappy)
-            self.lbl.bind("<Shift-Button-1>", beSleep)
-            self.lbl.bind("<Control-Button-1>", beStill)
-            self.lbl.bind("<Shift-Control-Button-1>", changeCat)
+            self.lbl.bind(MAKE_HAPPY_KEYS, beHappy)
+            self.lbl.bind(MAKE_SLEEPY_KEYS, beSleep)
+            self.lbl.bind(MAKE_STILL_KEYS, beStill)
+            self.lbl.bind(CHANGE_PET_KEYS, changeCat)
 
             # Run the repeating loop
 

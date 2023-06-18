@@ -40,7 +40,6 @@ MAKE_STILL_KEYS = "<Control-Button-1>"
 MAKE_BIG_KEYS = "<Alt-Button-1>"
 MAKE_SMALL_KEYS = "<Shift-Alt-Button-1>"
 
-
 CHANGE_PET_KEYS = "<Shift-Control-Button-1>"
 
 
@@ -112,6 +111,8 @@ def ahkScreenMover(info):
             self.updatePos()
             
         def moveTowards(self,tarx,tary):
+
+            # Updating size if size was updated
             win_pos = win.win.get_position()
             self.x = win_pos[0]
             self.y = win_pos[1]

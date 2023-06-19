@@ -330,7 +330,7 @@ def runPetScreen(info):
 
             self.orders = [(2,[0,1,0,2]),(2,[0,1]),(2,[0,1,2,3,3]),(2,[0,1,2,3,3]),(2,[0])]
 
-            # Recording state stuff
+            # Recording state stuff 
 
             self.petSize = 200
             self.isHappy = 0
@@ -343,6 +343,7 @@ def runPetScreen(info):
 
 
             # Creating label before hand so we don't create a bunch of labels and crash
+            
 
             img_original = Image.open("images/"+self.pet_names[self.which_pet][self.which_variant]+"/idle_0.png")
             

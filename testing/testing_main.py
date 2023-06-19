@@ -337,7 +337,7 @@ def runPetScreen(info):
             self.isAsleep = 0
             self.state = 0
             self.hasBeenMoving = 0
-            self.pet_names = [["orange_cat","grey_cat","emelem_cat"],["brown_dog","orange_dog"],["grey_bunny"]]
+            self.pet_names = [["orange_cat","grey_cat","emelem_cat"],["brown_dog","orange_dog"],["grey_bunny","brown_bunny"]]
             self.which_pet = 0
             self.which_variant = 0
 

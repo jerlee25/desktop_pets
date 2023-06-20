@@ -13,6 +13,9 @@ class Application(tk.Frame):
     
     def create_widget(self):
 
+        self.pet_names = ["orange_cat","grey_cat","emelem_cat","brown_dog","orange_dog","grey_bunny","brown_bunny"]
+        self.which_pet = 0
+
         style = ttk.Style()
         pyglet.font.add_file('testing/VT323-Regular.ttf')
         style.configure("TButton", font = ('VT323', 30, 'bold'), foreground = 'red')
@@ -34,13 +37,21 @@ class Application(tk.Frame):
     def customize_pet(self):
         # label = ttk.Label(self, image = ImageTk.PhotoImage(Image.open("images/emelem_cat/idle_0.png"))).grid(
         #                         row = 2, column = 0, padx = 75, pady = 25)
-        # button.place_forget()
-        img_original = Image.open("images/emelem_cat/idle_0.png")
+        
+        # self.pet_names = [["orange_cat","grey_cat","emelem_cat"],["brown_dog","orange_dog"],["grey_bunny","brown_bunny"]]
+        # self.which_pet = 0
+        # self.which_variant = 0
+        
+        if self.which_pet == len(self.pet_names) - 1:
+            self.which_pet = 0
+        else:
+            self.which_pet += 1
+        
+        img_original = Image.open("images/" + self.pet_names[self.which_pet] + "/idle_0.png")
         img_original = img_original.resize((root.winfo_width() - 275, root.winfo_height() - 275))
         img = ImageTk.PhotoImage(img_original)
-        bg = tk.Label(root, image=img).grid(row = 2, column = 0, padx = 75, pady = 25)
+        bg = tk.Button(root, image=img, command = self.customize_pet).grid(row = 2, column = 0, padx = 75, pady = 25)
         bg.image = img
-        # bg.pack(side="bottom", fill="both", expand="yes")
     
 root = tk.Tk()
 root.title("A Window!")

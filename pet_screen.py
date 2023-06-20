@@ -1,15 +1,12 @@
-import math
 import tkinter as tk
 from threading import Thread
-from time import perf_counter, sleep
 
-import keyboard
 from ahk import AHK
 from PIL import Image, ImageTk
 from playsound import playsound
 
-from keybinds import *
 import ahk_screen_mover
+from keybinds import *
 
 # Make the pet screen, take in an info object for communication
 
@@ -63,7 +60,7 @@ def runPetScreen(info):
             
             img = ImageTk.PhotoImage(img_original)
             self.lbl = tk.Label(self, image = img)
-            self.lbl.image = img
+            # self.lbl.image = img
             self.lbl.grid(row=0, column = 0, columnspan = 1)
 
             # Reactions to being clicked and stuff

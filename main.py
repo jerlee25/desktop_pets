@@ -38,4 +38,5 @@ class UsefulInfo():
 
 # print(f'It took {end_time- start_time: 0.2f} second(s) to complete.')
 
-menu.main()
+stuff = UsefulInfo()
+menu.run_menu(stuff)

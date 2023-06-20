@@ -12,9 +12,7 @@ from keybinds import *
 
 ahk = AHK()
 
-# Run screen mover code (originally from ahk_pet_screen_mover.py)
-
-def ahkScreenMover():
+def ahkScreenMover(info):
     # Waiting for other screen to appear
 
     sleep(1)

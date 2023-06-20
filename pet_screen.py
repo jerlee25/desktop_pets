@@ -11,14 +11,11 @@ from playsound import playsound
 from keybinds import *
 import ahk_screen_mover
 
-# Run pet screen code (originally from pet_screen.py)
-    
-def runPetScreen():
-    
-    # Make the pet screen, take in an info object for communication
-    
+# Make the pet screen, take in an info object for communication
+
+def runPetScreen(info):
     class PetScreen(tk.Frame):
-    
+
         def __init__(self, master,info):
 
             # Set a certain size, not exactly sure how to use tkinter properly, just took old code and messed with it until it worked
@@ -30,7 +27,7 @@ def runPetScreen():
             # Because it starts by incrementing it in the code so we start at -1 so it goes to 0 haha
 
             self.thing =  -1
-          
+            
 
             # 0 - idle
             # 1 - move
@@ -72,10 +69,10 @@ def runPetScreen():
             # Reactions to being clicked and stuff
 
             def beHappy(event):
-               
+                
                 if (self.info.isMoving==0):
                     self.state = 2
-                  
+                    
                     self.thing = -1
                     def play_sound():
                         playsound("images/"+self.pet_names[self.which_pet][self.which_variant]+"/meow.mp3")
@@ -135,12 +132,12 @@ def runPetScreen():
             self.dance() 
 
         
-   
-          
+
+            
         # The repeatng loop
 
         def dance(self):
-          
+            
             
             # Checks for when it starts moving and stops moving and just moving stuff in general
 
@@ -154,11 +151,11 @@ def runPetScreen():
                 self.state = 0
             if self.info.isMoving==1:
                 self.state = 1
-           
+            
             # Iterating
 
             self.thing+=1
-           
+            
             # Cycling like a bicycle but not actually
             # Does a bit of stuff with the orders to just find the next frame and when it changes that
             # Threw this together like instinctively and it sort of just worked so I'm keeping it like that
@@ -175,7 +172,7 @@ def runPetScreen():
             img_original = img_original.resize((self.petSize, self.petSize))
             
             img = ImageTk.PhotoImage(img_original)
-           
+            
             self.lbl.configure(image=img)
             self.lbl.image = img
         
@@ -183,14 +180,14 @@ def runPetScreen():
 
             self.after(100, self.dance)
 
-    return PetScreen
 
-if __name__ == "__main__":
+
+
     root = tk.Tk()
 
     root.title('PETSCREEN')
 
-    view = runPetScreen()
+    view = PetScreen(root, info)
     root.resizable(False,False)
 
     root.mainloop()

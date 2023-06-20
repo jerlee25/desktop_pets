@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 import pyglet
 import pet_screen
 
-def main():
+def run_menu(info):
     class Application(tk.Frame):
 
         def __init__(self, master):
@@ -28,19 +28,15 @@ def main():
 
         def open_pet(self):
             root.destroy
-            # pet = PetScreen()
+            pet_screen.runPetScreen(info)
 
         def customize_pet(self):
             label = ttk.Label()
             # button.place_forget()
 
-    return Application
-
-if __name__ == "__main__":
     root = tk.Tk()
     root.title("A Window!")
     root.geometry("500x500")
-    app = main()
+    app = Application(root)
 
     root.mainloop()
-    

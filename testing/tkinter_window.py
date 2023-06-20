@@ -31,8 +31,15 @@ class Application(tk.Frame):
 
     def open_pet(self):
         root.destroy()
-        # pet = PetScreen()
-        pass
+       
+        # t1 = Thread(target=lambda:ahk_screen_mover.ahkScreenMover(info))
+        # t2 = Thread(target=lambda:pet_screen.runPetScreen(info))
+
+        # t2.start()
+        # t1.start()
+
+        # t1.join()
+        # t2.join()
 
     def customize_pet(self):
         # label = ttk.Label(self, image = ImageTk.PhotoImage(Image.open("images/emelem_cat/idle_0.png"))).grid(

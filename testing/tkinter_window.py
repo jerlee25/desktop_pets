@@ -39,6 +39,14 @@ class Application(tk.Frame):
 root = tk.Tk()
 root.title("A Window!")
 root.geometry("500x500")
+
+bg = tk.PhotoImage(file = "images/background.png")
+# canvas1 = tk.Canvas(root, width = 400, height = 400)
+# canvas1.pack(fill = "both", expand = True)
+# canvas1.create_image(0, 0, image = bg, anchor = "nw")
+label = tk.Label(root, image = bg)
+label.place(x = 0,y = 0)
+
 app = Application(root)
 
 root.mainloop()

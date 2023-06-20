@@ -188,4 +188,3 @@ def runPetScreen(info):
     root.resizable(False,False)
 
     root.mainloop()
-    ahk_screen_mover.ahkScreenMover()

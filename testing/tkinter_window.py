@@ -21,7 +21,7 @@ class Application(tk.Frame):
         button = ttk.Button(self, text = "Launch!", style = "TButton", command = self.open_pet).grid(
                             row = 0, column = 0, padx = 100, pady = 50)
         button2 = ttk.Button(self, text = "Customize!", style = "TButton", command = self.customize_pet).grid(
-                            row = 1, column = 0, padx = 100, pady = 50)
+                            row = 1, column = 0, padx = 100, pady = 0)
         
         # uploading images option
         # customizing menu
@@ -32,9 +32,15 @@ class Application(tk.Frame):
         pass
 
     def customize_pet(self):
-        label = ttk.Label(self, image = ImageTk.PhotoImage(Image.open("images/emelem_cat/idle_0.png"))).grid(
-                                row = 2, column = 0, padx = 75, pady = 25)
+        # label = ttk.Label(self, image = ImageTk.PhotoImage(Image.open("images/emelem_cat/idle_0.png"))).grid(
+        #                         row = 2, column = 0, padx = 75, pady = 25)
         # button.place_forget()
+        img_original = Image.open("images/emelem_cat/idle_0.png")
+        img_original = img_original.resize((root.winfo_width() - 275, root.winfo_height() - 275))
+        img = ImageTk.PhotoImage(img_original)
+        bg = tk.Label(root, image=img).grid(row = 2, column = 0, padx = 75, pady = 25)
+        bg.image = img
+        # bg.pack(side="bottom", fill="both", expand="yes")
     
 root = tk.Tk()
 root.title("A Window!")

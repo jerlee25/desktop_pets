@@ -40,6 +40,9 @@ def run_menu(info):
     root.title("A Window!")
     root.geometry("500x500")
     bg = tk.PhotoImage(file = "images/background.png")
+    label = tk.Label(root, image = bg)
+    label.place(x = 0,y = 0)
+
     app = Application(root)
 
     root.mainloop()

@@ -104,7 +104,7 @@ def ahkScreenMover(info):
             self.updatePos()
 
     # Passes in the original window + the info object
-    win = specialWindow(or_win)
+    win = specialWindow(or_win, info)
 
     # Tracking type of movement I think
     state = 0
